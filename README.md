@@ -1,2 +1,3 @@
-# gb_learn_flask
-Geekbrains Flask course
+# FLASK
+
+### Урок 1. Знакомство: werkzeug, Flask
