@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "lesson-01"
+version = "0.1.0"
+description = ""
+authors = ["Frvzr <ikoposhilov@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "lesson_01"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^2.2.3"
+
+
+[tool.poetry.group.dev.dependencies]
+flask = "^2.2.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
