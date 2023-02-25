@@ -1,9 +1,14 @@
-from flask import Flask, g
-from flask import request
+from flask import Flask
+from blog.user.views import user
+from blog.articles.views import articles_app
 
-app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return "Index view для обработки посещений на корень сайта"
+def create_app() -> Flask:
+    app = Flask(__name__)
+    register_blueprints(app)
+    return app.run()
+
+def register_blueprints(app: Flask):
+    app.register_blueprint(user)
+    app.register_blueprint(articles_app)
 
