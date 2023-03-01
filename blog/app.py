@@ -1,6 +1,7 @@
 from flask import Flask
 from blog.user.views import user
 from blog.articles.views import articles_app
+from blog.models.database import db
 
 
 def create_app() -> Flask:
@@ -12,3 +13,7 @@ def register_blueprints(app: Flask):
     app.register_blueprint(user)
     app.register_blueprint(articles_app)
 
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/blog.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.inint_app(app)
