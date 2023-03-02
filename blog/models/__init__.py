@@ -1,5 +1,6 @@
-from blog.models.user import User
+from blog.models.models import User
+
 
 __all__ = [
     "User",
-]
+    ]
