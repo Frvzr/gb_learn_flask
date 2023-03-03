@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from werkzeug.exceptions import NotFound
-from blog.models import User
+from blog.models.models import User
 
 user = Blueprint("users", __name__, url_prefix='/users', static_folder='../static')
 
