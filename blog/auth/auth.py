@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from blog.models.models import User
+from blog.forms.auth import LoginForm
 
 
 auth = Blueprint('auth', __name__, static_folder='../static')

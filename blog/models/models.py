@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from blog.models.database import db
 from flask_login import UserMixin
+from werkzeug.security import check_password_hash
 
 
 class User(db.Model, UserMixin):
@@ -11,6 +12,7 @@ class User(db.Model, UserMixin):
     username = Column(String(80), unique=True, nullable=False)
     email = Column(String(80), unique=True)
     first_name = Column(String(80))
+    last_name = Column(String(80))
     password = Column(String(80))
     is_staff = Column(Boolean, nullable=False, default=False)
     
@@ -18,6 +20,16 @@ class User(db.Model, UserMixin):
     
     def __repr__(self):
         return f"<User #{self.id} {self.username!r}>"
+
+    def __init__(self, username, email, first_name, last_name, password):
+        self.username = username
+        self.email = email
+        self.password = password
+        self.first_name = first_name
+        self.last_name = last_name
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.password, password)
 
 
 class Article(db.Model):

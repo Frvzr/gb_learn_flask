@@ -4,3 +4,4 @@
 ### Урок 2. Шаблоны Jinja2. Комплексные приложения на Flask. Blueprints
 ### Урок 3. Авторизация пользователя и начало работы с базой данных. SQLAlchemy
 ### Урок 4. Docker, docker-compose, Postgres. Миграции схем Flask-Migrate и alembic
+### Урок 5. WTForms. Регистрация и авторизация пользователя
