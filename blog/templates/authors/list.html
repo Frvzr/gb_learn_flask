@@ -15,7 +15,7 @@ Author list
             <li>
                 <a href="{{ url_for('users.profile', pk=author.user.id) }}">
                     {{ author.user.first_name }} {{ author.user.last_name }}</a>
-                {% if user.is_staff %}
+                {% if author.user.is_staff %}
                 <span class="badge bg-secondary">staff</span>
                 {% endif %}
                 {% endfor %}
