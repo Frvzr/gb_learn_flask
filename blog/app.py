@@ -7,6 +7,7 @@ from blog.user.views import user
 from blog.articles.views import articles_app
 from blog.models.database import db
 from blog.auth.auth import login_manager
+from blog.authors.views import author
 
 
 def create_app() -> Flask:
@@ -36,6 +37,7 @@ def register_blueprints(app: Flask):
     app.register_blueprint(user)
     app.register_blueprint(articles_app)
     app.register_blueprint(auth)
+    app.register_blueprint(author)
 
 
 def register_commands(app: Flask):

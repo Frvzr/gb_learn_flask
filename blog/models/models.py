@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     password = Column(String(80))
     is_staff = Column(Boolean, nullable=False, default=False)
     
-    atricles = relationship('Article', backref='user', lazy=True)
+    authors = relationship('Author', backref='user', lazy=True)
     
     def __repr__(self):
         return f"<User #{self.id} {self.username!r}>"
@@ -31,6 +31,14 @@ class User(db.Model, UserMixin):
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
 
+class Author(db.Model):
+    __tablename__ = 'authors'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False) 
+
+    aricles = relationship('Article', backref='user', lazy=True)
+
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -38,7 +46,9 @@ class Article(db.Model):
     article_id = Column(Integer, primary_key=True)
     title = Column(String(255))
     text = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    author_id = Column(Integer, ForeignKey('authors.id'))
 
     def __repr__(self):
         return f"<Article #{self.article_id} {self.title!r}>"
+
+
