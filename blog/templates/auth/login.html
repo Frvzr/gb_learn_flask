@@ -1,19 +1,33 @@
 {% extends 'base.html' %}
+{% from "macro/formhelpers.html" import render_field %}
 
 {% block title %}
-Login as
+Login page
 {% endblock %}
 
 {% block body %}
-<h1>Login as user:</h1>
-{% if error %}
-<div class="alert alert-danger" role="alert">
-    {{ error }}
+<div class="row">
+    <h1>Login user:</h1>
 </div>
-{% endif %}
-<form method="post">
-    <label for="input-username">Login as (username):</label>
-    <input id="input-username" type="text" name="username" placeholder="guest" required>
-    <button type="submit">Login</button>
-</form>
+<div class="row">
+    <div class="col">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('auth.login_post') }}">
+            {{ form.csrf_token }}
+            {% for field in ['username', 'password'] %}
+            {{ render_field(form[field]) }}
+            {% endfor %}
+
+            {{ form.submit(class="btn btn-primary mb-3") }}
+        </form>
+    </div>
+</div>
 {% endblock %}
