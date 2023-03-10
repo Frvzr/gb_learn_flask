@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from blog.models.database import db
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
+from datetime import datetime
 
 
 class User(db.Model, UserMixin):
@@ -38,7 +39,7 @@ class Author(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False) 
 
-    aricles = relationship('Article', backref='user', lazy=True)
+    aricles = relationship('Article', backref='author', lazy=True)
 
 
 class Article(db.Model):
@@ -48,6 +49,8 @@ class Article(db.Model):
     title = Column(String(255))
     text = Column(String)
     author_id = Column(Integer, ForeignKey('authors.id'))
+    created = Column(DateTime, default=datetime.utcnow)
+    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
         return f"<Article #{self.article_id} {self.title!r}>"
