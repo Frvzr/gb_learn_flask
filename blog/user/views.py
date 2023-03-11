@@ -16,9 +16,7 @@ def register():
         return redirect(url_for('users.profile', pk=current_user.id))
     
     form = UserRegisterForm(request.form)
-
     
-    form = UserRegisterForm(request.form)
     errors = []
     if request.method == 'POST' and form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).count():

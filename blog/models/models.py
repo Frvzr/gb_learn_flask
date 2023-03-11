@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from blog.models.database import db
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
+from datetime import datetime
 
 
 class User(db.Model, UserMixin):
@@ -14,22 +15,31 @@ class User(db.Model, UserMixin):
     first_name = Column(String(80))
     last_name = Column(String(80))
     password = Column(String(80))
-    is_staff = Column(Boolean, nullable=False, default=False)
+    is_staff = Column(Boolean, default=False)
     
-    atricles = relationship('Article', backref='user', lazy=True)
+    authors = relationship('Author', backref='user', lazy='dynamic')
     
     def __repr__(self):
         return f"<User #{self.id} {self.username!r}>"
 
-    def __init__(self, username, email, first_name, last_name, password):
+    def __init__(self, username, email, first_name, last_name, password, is_staff):
         self.username = username
         self.email = email
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
+        self.is_staff = is_staff
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
+
+class Author(db.Model):
+    __tablename__ = 'authors'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False) 
+
+    aricles = relationship('Article', backref='author', lazy='dynamic')
 
 
 class Article(db.Model):
@@ -38,7 +48,11 @@ class Article(db.Model):
     article_id = Column(Integer, primary_key=True)
     title = Column(String(255))
     text = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    author_id = Column(Integer, ForeignKey('authors.id'), nullable=False)
+    created = Column(DateTime, default=datetime.utcnow)
+    updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
         return f"<Article #{self.article_id} {self.title!r}>"
+
+
