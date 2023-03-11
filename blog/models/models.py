@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     password = Column(String(80))
     is_staff = Column(Boolean, default=False)
     
-    authors = relationship('Author', backref='user', lazy=True)
+    authors = relationship('Author', backref='user', lazy='dynamic')
     
     def __repr__(self):
         return f"<User #{self.id} {self.username!r}>"
@@ -39,7 +39,7 @@ class Author(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False) 
 
-    aricles = relationship('Article', backref='author', lazy=True)
+    aricles = relationship('Article', backref='author', lazy='dynamic')
 
 
 class Article(db.Model):
@@ -48,7 +48,7 @@ class Article(db.Model):
     article_id = Column(Integer, primary_key=True)
     title = Column(String(255))
     text = Column(String)
-    author_id = Column(Integer, ForeignKey('authors.id'))
+    author_id = Column(Integer, ForeignKey('authors.id'), nullable=False)
     created = Column(DateTime, default=datetime.utcnow)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

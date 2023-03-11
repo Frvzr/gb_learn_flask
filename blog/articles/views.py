@@ -29,7 +29,7 @@ def create_article():
         _article = Article(title=form.title.data.strip(), text=form.text.data)
 
         if current_user.authors:
-            _article.author_id = current_user.authors
+            _article.authors_id = current_user.authors
         else:
             author = Author(user_id=current_user.id)
             db.session.add(author)
@@ -39,6 +39,6 @@ def create_article():
         db.session.add(_article)
         db.session.commit()
 
-        return redirect(url_for('article.details', article_id=_article.id))
+        return redirect(url_for('article.get_articles', article_id=_article.id))
     
     return render_template('articles/create.html', form=form, errors=errors)
