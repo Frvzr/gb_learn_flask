@@ -9,8 +9,20 @@ Article {{ articles_app.id }}: {{ articles_app.title }}
     <a href="{{ url_for('articles_app.list') }}">Back to articles list</a>
 </div>
 <h1>{{ articles_app.title }}</h1>
-<p>{{ articles_app.text }}</p>
-<p>Author: {{ articles_app.author.user.username}}</p>
-<p>Created: {{ articles_app.created}}</p>
-
+<div class="row">
+    <div class="col-md-12">{{ articles_app.text }}</div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div><small class="text-muted"></small>Author: {{ articles_app.author.user.first_name}} {{ articles_app.author.user.last_name}}</small></div>
+        <div><small class="text-muted">{{ articles_app.created}}</small></div>
+        <div><small class="text-muted">{{ articles_app.updated}}</small></div>
+    </div>
+    <!-- .strftime('%d-%m-%Y %H:%M:%S') -->
+    <div class="col-6">
+        {% for tag in articles_app.tags %}
+        <span class="badge bg-light text-dark"><a href="{{ url_for('articles_app.get_articles_by_tag', pk=tag.id) }}">{{ tag.name }}</a></span>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

@@ -1,9 +1,17 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Table
 from sqlalchemy.orm import relationship
 from blog.models.database import db
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
 from datetime import datetime
+
+
+article_tag_association_table = Table(
+    'article_tag_associations',
+    db.metadata,
+    Column('article_id', Integer, ForeignKey('articles.article_id'), nullable=False),
+    Column('tag_id', Integer, ForeignKey('tags.id'), nullable=False)
+)
 
 
 class User(db.Model, UserMixin):
@@ -22,16 +30,17 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User #{self.id} {self.username!r}>"
 
-    def __init__(self, username, email, first_name, last_name, password, is_staff):
-        self.username = username
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.is_staff = is_staff
+    # def __init__(self, username, email, first_name, last_name, password, is_staff):
+    #     self.username = username
+    #     self.email = email
+    #     self.password = password
+    #     self.first_name = first_name
+    #     self.last_name = last_name
+    #     self.is_staff = is_staff
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
+
 
 class Author(db.Model):
     __tablename__ = 'authors'
@@ -39,7 +48,7 @@ class Author(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False) 
 
-    aricles = relationship('Article', backref='author', lazy='dynamic')
+    articles = relationship('Article', backref='author', lazy='dynamic')
 
 
 class Article(db.Model):
@@ -54,5 +63,12 @@ class Article(db.Model):
 
     def __repr__(self):
         return f"<Article #{self.article_id} {self.title!r}>"
+        
+    tags = relationship('Tag', secondary=article_tag_association_table, backref='articles', lazy='dynamic')
 
 
+class Tag(db.Model):
+    __tablename__ = 'tags'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
