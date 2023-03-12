@@ -15,7 +15,9 @@ def articles_list():
 
 @articles_app.route("/<int:pk>/", methods=['GET'])
 def get_articles(pk: int):
-    article: Article = Article.query.filter_by(article_id=pk).one_or_none()
+    article: Article = Article.query.filter_by(article_id=pk).options(
+joinedload(Article.tags)).one_or_none()
+
     if article is None:
         raise NotFound(f"Article #{pk} doesn't exist!")
     return render_template('articles/details.html', articles_app=article)
@@ -31,7 +33,6 @@ def create_article_form():
 @login_required
 def create_article():
     form = CreateArticleForm(request.form)
-    errors = []
 
     form.tags.choices = [(tag.id, tag.name) for tag in Tag.query.order_by('name')]
 
@@ -44,7 +45,7 @@ def create_article():
             author = Author(user_id=current_user.id)
             db.session.add(author)
             db.session.flush()
-            _article.author_id= author.id
+            _article.author_id = author.id
         
         if form.tags.data:
             selected_tags = Tag.query.filter(Tag.id.in_(form.tags.data))
@@ -56,13 +57,14 @@ def create_article():
 
         return redirect(url_for('articles_app.get_articles', pk=_article.article_id))
     
-    return render_template('articles/create.html', form=form, errors=errors)
+    return render_template('articles/create.html', form=form)
 
 
 @articles_app.route("/tag/<int:pk>/", methods=['GET'])
 @login_required
 def get_articles_by_tag(pk: int):
-    article = Tag.query.filter_by(id=pk)
+    article = Article.query.filter(Tag.id==pk).all()
+    print(article)
     if article is None:
         raise NotFound(f"Article #{pk} doesn't exist!")
     return render_template('articles/tags.html', articles_app=article)

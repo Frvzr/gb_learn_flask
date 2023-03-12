@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Table
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Table, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from blog.models.database import db
 from flask_login import UserMixin
@@ -25,7 +25,7 @@ class User(db.Model, UserMixin):
     password = Column(String(80))
     is_staff = Column(Boolean, default=False)
     
-    authors = relationship('Author', backref='user', lazy='dynamic')
+    authors = relationship('Author', backref='user', uselist=False)
     
     def __repr__(self):
         return f"<User #{self.id} {self.username!r}>"
@@ -48,7 +48,7 @@ class Author(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False) 
 
-    articles = relationship('Article', backref='author', lazy='dynamic')
+    articles = relationship('Article', backref='author')
 
 
 class Article(db.Model):
@@ -64,7 +64,7 @@ class Article(db.Model):
     def __repr__(self):
         return f"<Article #{self.article_id} {self.title!r}>"
         
-    tags = relationship('Tag', secondary=article_tag_association_table, backref='articles', lazy='dynamic')
+    tags = relationship('Tag', secondary=article_tag_association_table, backref='articles')
 
 
 class Tag(db.Model):
@@ -72,3 +72,4 @@ class Tag(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
+
