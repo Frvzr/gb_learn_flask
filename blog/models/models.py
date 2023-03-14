@@ -27,8 +27,8 @@ class User(db.Model, UserMixin):
     
     authors = relationship('Author', backref='user', uselist=False)
     
-    def __repr__(self):
-        return f"<User #{self.id} {self.username!r}>"
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}, {self.email} ({self.id})'
 
     # def __init__(self, username, email, first_name, last_name, password, is_staff):
     #     self.username = username
@@ -50,6 +50,9 @@ class Author(db.Model):
 
     articles = relationship('Article', backref='author')
 
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -60,11 +63,11 @@ class Article(db.Model):
     author_id = Column(Integer, ForeignKey('authors.id'), nullable=False)
     created = Column(DateTime, default=datetime.utcnow)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    def __repr__(self):
-        return f"<Article #{self.article_id} {self.title!r}>"
         
     tags = relationship('Tag', secondary=article_tag_association_table, backref='articles')
+
+    def __str__(self):
+        return self.title
 
 
 class Tag(db.Model):
@@ -72,4 +75,7 @@ class Tag(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
+
+    def __str__(self):
+        return self.name
 

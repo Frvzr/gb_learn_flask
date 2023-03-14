@@ -9,7 +9,7 @@ from blog.forms.auth import LoginForm
 @auth.route('/login', methods=('GET',))
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('user.profile', pk=current_user.id))
+        return redirect(url_for('users.profile', pk=current_user.id))
 
     return render_template('auth/login.html', form=LoginForm(request.form))
 
@@ -36,9 +36,4 @@ def logout():
     logout_user()
     return redirect(url_for("users.list"))
 
-
-@auth.route("/index")
-@login_required
-def secret_view():
-    return render_template('index.html')
 
