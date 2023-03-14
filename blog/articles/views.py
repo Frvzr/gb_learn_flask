@@ -4,7 +4,8 @@ from blog.models.models import Article, Author, Tag
 from blog.forms.article import CreateArticleForm
 from flask_login import login_required, current_user
 from blog.models.database import db
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, session
+from sqlalchemy import select
 
 articles_app = Blueprint("articles_app", __name__, url_prefix='/articles', static_folder='../static')
 
@@ -63,8 +64,7 @@ def create_article():
 @articles_app.route("/tag/<int:pk>/", methods=['GET'])
 @login_required
 def get_articles_by_tag(pk: int):
-    article = Article.query.filter(Tag.id==pk).all()
-    print(article)
+    article = Article.query.join(Article.tags).filter(Tag.id==pk)
     if article is None:
         raise NotFound(f"Article #{pk} doesn't exist!")
     return render_template('articles/tags.html', articles_app=article)
