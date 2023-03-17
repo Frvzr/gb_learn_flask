@@ -10,14 +10,15 @@ class UserSchema(Schema):
         self_url_many = 'user_list'
 
     id = fields.Integer(as_string=True)
+    username = fields.String(allow_none=False, required=True)
+    email = fields.Email(allow_none=False, required=True)
     first_name = fields.String(allow_none=False, required=True)
     last_name = fields.String(allow_none=False, required=True)
-    email = fields.Email(allow_none=False, required=True)
     is_staff = fields.Boolean(allow_none=False)
 
     author = Relationship(
         nested='AuthorSchema',
-        attribute='author',
+        attribute='authors',
         related_url='author_detail',
         related_url_kwargs={'id': '<id>'},
         schema='AuthorSchema',
