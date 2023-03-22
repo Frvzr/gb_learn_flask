@@ -6,22 +6,32 @@ from flask_login import login_required, current_user
 from blog.models.database import db
 from sqlalchemy.orm import joinedload, session
 from sqlalchemy import select
+from typing import Dict
+import requests
 
 articles_app = Blueprint("articles_app", __name__, url_prefix='/articles', static_folder='../static')
 
 @articles_app.route("/", methods=['GET'], endpoint="list")
 def articles_list():
-    articles = Article.query.all()
-    return render_template("articles/list.html", articles=articles)
+    _articles = Article.query.all()
+    count_articles: Dict = requests.get('http://127.0.0.1:5000/api/articles/event_get_count/').json()
+    return render_template(
+        'articles/list.html',
+        articles=_articles,
+        count_articles=count_articles['count'],
+
+    )
+
 
 @articles_app.route("/<int:pk>/", methods=['GET'])
 def get_articles(pk: int):
-    article: Article = Article.query.filter_by(article_id=pk).options(
+    _article: Article = Article.query.filter_by(article_id=pk).options(
 joinedload(Article.tags)).one_or_none()
 
-    if article is None:
+    if _article is None:
         raise NotFound(f"Article #{pk} doesn't exist!")
-    return render_template('articles/details.html', articles_app=article)
+    return render_template('articles/details.html', articles_app=_article)
+
 
 @articles_app.route('/create/', methods=['GET'])
 @login_required
