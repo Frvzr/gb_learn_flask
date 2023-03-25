@@ -8,13 +8,14 @@ from sqlalchemy.orm import joinedload, session
 from sqlalchemy import select
 from typing import Dict
 import requests
+from blog.config import API_URL
 
 articles_app = Blueprint("articles_app", __name__, url_prefix='/articles', static_folder='../static')
 
 @articles_app.route("/", methods=['GET'], endpoint="list")
 def articles_list():
     _articles = Article.query.all()
-    count_articles: Dict = requests.get('http://127.0.0.1:5000/api/articles/event_get_count/').json()
+    count_articles: Dict = requests.get(f'{API_URL}/api/articles/event_get_count/').json()
     return render_template(
         'articles/list.html',
         articles=_articles,
