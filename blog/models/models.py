@@ -67,7 +67,7 @@ class Article(db.Model):
     tags = relationship('Tag', secondary=article_tag_association_table, backref='articles')
 
     def __str__(self):
-        return self.title
+        return f'{self.title}'
 
 
 class Tag(db.Model):
@@ -77,5 +77,5 @@ class Tag(db.Model):
     name = Column(String(255), nullable=False)
 
     def __str__(self):
-        return self.name
+        return f'{self.articles.tags.name}'
 
