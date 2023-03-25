@@ -4,23 +4,18 @@ from blog.models.models import Article, Author, Tag
 from blog.forms.article import CreateArticleForm
 from flask_login import login_required, current_user
 from blog.models.database import db
-from sqlalchemy.orm import joinedload, session
-from sqlalchemy import select
-from typing import Dict
-import requests
-from blog.config import API_URL
+from sqlalchemy.orm import joinedload
+
 
 articles_app = Blueprint("articles_app", __name__, url_prefix='/articles', static_folder='../static')
 
 @articles_app.route("/", methods=['GET'], endpoint="list")
 def articles_list():
     _articles = Article.query.all()
-    count_articles: Dict = requests.get(f'{API_URL}/api/articles/event_get_count/').json()
+   
     return render_template(
         'articles/list.html',
         articles=_articles,
-        count_articles=count_articles['count'],
-
     )
 
 
@@ -76,6 +71,8 @@ def create_article():
 @login_required
 def get_articles_by_tag(pk: int):
     article = Article.query.join(Article.tags).filter(Tag.id==pk)
+    print(article)
     if article is None:
         raise NotFound(f"Article #{pk} doesn't exist!")
     return render_template('articles/tags.html', articles_app=article)
+
