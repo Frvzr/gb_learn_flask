@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        {% block css %}
-        <!-- Bootstrap CSS -->
-        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-        {% endblock %}
 
-        <title>
-            {% block title %} My app - {% endblock %} 
-        </title>
-    </head> 
-    <body>
-        {% include 'navbar.html' %}
-        <div class="container">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% block css %}
+    <!-- Bootstrap CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    {% endblock %}
+
+    <title>
+        {% block title %} My app - {% endblock %}
+    </title>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
         {% block body %} {% endblock %}
     </div>
 
@@ -26,4 +28,5 @@
     {% endblock %}
 
 </body>
+
 </html>

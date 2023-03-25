@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Articles list
+Articles list by author
 {% endblock %}
 
 {% block body %}
+
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <h1>Статьи</h1>
+            <h1>Статьи автора {{ author.first_name}}</h1>
         </div>
 
         <div class="list-group">
-            {% for article in articles %}
+            {% for article in author %}
             <a href="{{ url_for('articles_app.get_articles', pk=article.article_id) }}" class="list-group-item list-group-item-action " aria-current="true">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{ article.title -}}</h5>
+                    <h5 class="mb-1">{{ article.tags.name}}</h5>
                     <small>{{ article.created}}</small>
                 </div>
-                <p class="mb-1">Some placeholder content in a paragraph.</p>
-                <small>And some small print.</small>
             </a>
             <br>
             {% endfor %}
