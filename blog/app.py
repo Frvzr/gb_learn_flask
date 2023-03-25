@@ -11,6 +11,7 @@ from blog.articles.views import articles_app
 from blog.models.database import db
 from blog.auth.auth import login_manager
 from blog.authors.views import author
+from blog.index.views import index
 
 
 
@@ -71,10 +72,10 @@ def register_api(app: Flask):
 
     api.route(ArticleList, 'article_list', '/api/articles/', tag='Article')
     api.route(ArticleDetail, 'article_detail', '/api/articles/<int:id>', tag='Article')
-    #api.route(ArtcicleEvent, 'article_detail_count', 'api/articles_count/', tag='Article')
 
 def register_blueprints(app: Flask):
     from blog import admin
+    app.register_blueprint(index)
     app.register_blueprint(user)
     app.register_blueprint(articles_app)
     app.register_blueprint(auth)

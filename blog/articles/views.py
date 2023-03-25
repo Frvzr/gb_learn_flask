@@ -10,6 +10,7 @@ from sqlalchemy.orm import joinedload
 articles_app = Blueprint("articles_app", __name__, url_prefix='/articles', static_folder='../static')
 
 @articles_app.route("/", methods=['GET'], endpoint="list")
+@login_required
 def articles_list():
     _articles = Article.query.all()
    
@@ -20,6 +21,7 @@ def articles_list():
 
 
 @articles_app.route("/<int:pk>/", methods=['GET'])
+@login_required
 def get_articles(pk: int):
     _article: Article = Article.query.filter_by(article_id=pk).options(
 joinedload(Article.tags)).one_or_none()
